@@ -15,3 +15,5 @@ download.file(link_to_the_file, destfile = "../raw_data/le_zip_telecharge.zip")
 # dont forget .zip at the end of the destfile otherwise we load a strang something
 unzip("../raw_data/le_zip_telecharge.zip", exdir = "../raw_data/")
 
+
+
