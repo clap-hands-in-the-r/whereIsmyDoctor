@@ -85,3 +85,9 @@ ex1_1500[]
 
 
 # Code_profession == 10 means "Médecin" (doctor)
+
+#install.packages("lobstr")
+library(lobstr)
+S3Class(ex1)
+#[1] "data.table" "data.frame"
+
