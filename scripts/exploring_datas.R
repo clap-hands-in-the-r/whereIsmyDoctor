@@ -12,6 +12,8 @@ library(data.table)
 
 file1 <- "../raw_data/PS_LibreAcces_Personne_activite_202504040839.txt"
 ex1 <- fread(file1,nrows = 2)
+ex1_1500 <- fread(file1,nrows = 1500)
+
 
 file2 <- "../raw_data/PS_LibreAcces_Dipl_AutExerc_202504040839.txt"
 ex2 <- fread(file2,nrows = 2)
@@ -66,3 +68,20 @@ length(readLines(file2))
 NROW(fread(file3))
 # file savoirs faires
 # [1] 405 502
+
+# we will now focus on exploring df1
+
+df1 <- fread(file1)
+object.size(df1)
+save(df1, file = "../raw_data/df1.rda")
+
+#install.packages("skimr")
+library(skimr)
+install.packages("stringr")
+library(stringr)
+skim(ex1_1500)
+colnames(ex1_1500) <- str_replace_all(colnames(ex1_1500)," ","_")
+ex1_1500[]
+
+
+# Code_profession == 10 means "Médecin" (doctor)
