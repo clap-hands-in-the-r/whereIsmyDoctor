@@ -3,6 +3,18 @@
 .txt
 /raw_data/
 
+#this file is to heavy to be commited
+/transf_data/df1l_ur.rda 
+#this one too
+/transf_data/commune_geo_l.rda
+/transf_data/df1l_urg.rda
+/transf_data/df1l_urgl.rda
+/transf_data/df1l_urg_test.rda
+/transf_data/df1l_urgl_test.rda
+
+#this file has no interest being commited
+/transf_data/activities_group_table.xlsx
+
 # History files
 .Rhistory
 .Rapp.history

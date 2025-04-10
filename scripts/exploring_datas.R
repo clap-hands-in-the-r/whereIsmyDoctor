@@ -85,7 +85,8 @@ NROW(fread(file3))
 
 df1 <- fread(file1)
 object.size(df1)
-save(df1, file = "../raw_data/df1.rda")
+#save(df1, file = "../raw_data/df1.rda")
+#load(file = "../raw_data/df1.rda")
 
 #install.packages("skimr")
 library(skimr)
@@ -232,9 +233,95 @@ df1l_first_occ <- df1l_sm42 |> group_by(identifiant_pp) |> slice(1)
 # keep only lines in the file whose location is filled
 # keep only first rows which is arbitrary
 
-
+# select only physical practicionners code_profession == 10 
+# retain only useful columns for our study with c(2...)
 df1l <- df1[code_profession == 10,c(2,3,4,5,6,7,8,9,10,11,16,17,18,19,29,30,32,33,36,37,38)]
 df1l <- df1l[code_savoir_faire != "",]
 df1l <- df1l[code_postal_coord_structure != "",]
 
 
+eff_by_code_svf <- df1l |> group_by(code_savoir_faire,libelle_savoir_faire) |> 
+    summarize(eff = n()) |> 
+    as.data.frame() |> 
+    adorn_totals()
+
+# arbitratry unicity of work location because we do not have another mean
+# some data are not public
+# df1l_u _u stands for unique
+df1l_u <- df1l |> group_by(identifiant_pp) |> slice(1)
+
+eff_by_code_svf_u <- df1l_u |> group_by(code_savoir_faire,libelle_savoir_faire) |> 
+    summarize(eff = n()) |> 
+    as.data.frame() |> 
+    adorn_totals()
+
+# description of activities is not absolutely clean
+# so we're going to create a table to group some of them
+library(xlsx)
+write.xlsx(eff_by_code_svf_u, "../transf_data/activities_group_table.xlsx", row.names = F)
+file.show("../transf_data/activities_group_table.xlsx")
+
+file.show("../transf_data/activities_group_table_processed.xlsx")
+acti_group_t <- read.xlsx2("../transf_data/activities_group_table_processed.xlsx", sheetIndex = 1)
+
+acti_group_t <- acti_group_t[,-c(2,3)]
+
+# r stand for recoded (ie activities recoded according to previous table)
+df1l_ur <- df1l_u |> 
+    left_join(acti_group_t, by = c("code_savoir_faire"="code_savoir_faire"))
+
+eff_by_code_svf_ur <- df1l_ur |> group_by(code_savoir_faire,libelle_savoir_faire) |> 
+    summarize(eff = n()) |> 
+    as.data.frame() |> 
+    adorn_totals()
+
+save(df1l_ur, file = "../transf_data/df1l_ur.rda")
+
+library(lobstr)
+S3Class(df1l_ur)
+
+# g stands for grouped
+df1l_urg <-  df1l_ur |> 
+    group_by(code_spe_rgpe,lib_spe_rgpe,code_commune_coord_structure,libelle_commune_coord_structure) |> 
+    summarize(eff = n()) |> 
+    ungroup()
+
+sum(df1l_urg$eff) # 223455 OK
+
+
+
+# l stands for localised
+df1l_urgl <- df1l_urg |> left_join(commune_geo_l, 
+                                   by = c("code_commune_coord_structure" =
+                                              "INSEE_COM") )
+# we have to retreat paris marseilles
+
+# test
+df1l_urg_test <-  df1l_ur |> 
+    group_by(code_commune_coord_structure,libelle_commune_coord_structure) |> 
+    summarize(eff = n()) |> 
+    ungroup()
+
+# Communes that does not match...
+df1l_urgl_test <- df1l_urg_test|> left_join(commune_geo_l, 
+                                            by = c("code_commune_coord_structure" =
+                                                       "INSEE_COM") )
+empty_poly <- df1l_urgl_test |> 
+    filter(is.na(POPULATION))
+
+save(df1l_urg,file = "../transf_data/df1l_urg.rda")
+save(df1l_urg_test,file = "../transf_data/df1l_urg_test.rda")
+save(df1l_urgl_test,file = "../transf_data/df1l_urgl_test.rda")
+save(df1l_urgl,file = "../transf_data/df1l_urgl.rda")
+
+lry <- commune_geo_l |> 
+    filter(INSEE_COM == "85191")
+
+lry_center <- st_centroid(lry)
+
+names(commune_geo_l)
+S3Class(commune_geo_l)
+S3Class(lry)
+
+st_centroid(lry)
+st_point_on_surface(lry)
