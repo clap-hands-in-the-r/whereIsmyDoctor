@@ -325,3 +325,31 @@ S3Class(lry)
 
 st_centroid(lry)
 st_point_on_surface(lry)
+
+load("../transf_data/df1l_urg_test.rda")
+load("../transf_data/df1l_urgl_test.rda")
+
+no_matchs <- df1l_urgl_test |> filter(is.na(POPULATION))
+
+is_it_better <- no_matchs |> left_join(comm_ass, by = c("code_commune_coord_structure"= "INSEE_COM"))
+
+#### test with arrondissement
+
+is_it_better <- no_matchs |> 
+    left_join(arrond,by = c("code_commune_coord_structure"= "INSEE_COM"))
+
+#### test with arrondissement municipal
+
+is_it_better <- no_matchs |> 
+    left_join(arrond_mun,by = c("code_commune_coord_structure"= "INSEE_ARM"))
+# it is better!
+
+# what is left
+no_matchs2 <- is_it_better |> filter(is.na(AREA))
+
+sum(no_matchs2$eff)
+sum(df1l_urg_test$eff)
+# rate of losses
+sum(no_matchs2$eff)/sum(df1l_urg_test$eff)
+#[1] 0.006878342
+

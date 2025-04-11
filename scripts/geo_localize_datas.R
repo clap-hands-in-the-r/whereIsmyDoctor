@@ -10,8 +10,11 @@ library(mapview)
 # files from 
 #https://www.data.gouv.fr/fr/datasets/admin-express-admin-express-cog-admin-express-cog-carto-admin-express-cog-carto-pe/#/resources
 
+
+
 commune_geo <- st_read(dsn="../raw_data/COMMUNE.shp") |>
     mutate(AREA=st_area(geometry))
+
 
 # l stands for light
 commune_geo_l <- commune_geo |> 
@@ -20,6 +23,19 @@ commune_geo_l <- st_as_sf(commune_geo_l)
 
 save(commune_geo_l, file = "../transf_data/commune_geo_l.rda")
 
+
+# test with communes associées
+comm_ass <- st_read(dsn="../raw_data/COMMUNE_ASSOCIEE_OU_DELEGUEE.shp") |>
+    mutate(AREA=st_area(geometry))
+
+# test with arrondissement
+arrond <- st_read(dsn="../raw_data/ARRONDISSEMENT.shp") |>
+    mutate(AREA=st_area(geometry))
+
+
+# test with arrondissement municipal
+arrond <- st_read(dsn="../raw_data/ARRONDISSEMENT.shp") |>
+    mutate(AREA=st_area(geometry))
 
 #--------------
 
