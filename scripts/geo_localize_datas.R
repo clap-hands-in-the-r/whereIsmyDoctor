@@ -34,7 +34,7 @@ arrond <- st_read(dsn="../raw_data/ARRONDISSEMENT.shp") |>
 
 
 # test with arrondissement municipal
-arrond <- st_read(dsn="../raw_data/ARRONDISSEMENT.shp") |>
+arrond_mun <- st_read(dsn="../raw_data/ARRONDISSEMENT_MUNICIPAL.shp") |>
     mutate(AREA=st_area(geometry))
 
 #--------------
