@@ -29,3 +29,24 @@ download.file(link_to_geo_datas, destfile = "../raw_data/france_entiere.7z")
 # a <- system.file(package = "archive", "extdata", "../raw_data/france_entiere.7z")
 # d <- tempfile()
 # archive_extract(a, dir = "../raw_data/")
+
+
+# links toward "commmunes nouvelles"
+link_new_com <-  "https://www.data.gouv.fr/fr/datasets/r/eaa68059-aaea-4ff9-a6f8-cf6146fe8a8b"
+
+download.file(link_new_com, destfile = "../raw_data/communes_nouvelles.csv")
+
+
+# root source
+# https://geoservices.ign.fr/adminexpress#telechargement
+
+# link france entière
+link_fr_entier = "https://data.geopf.fr/telechargement/download/ADMIN-EXPRESS/ADMIN-EXPRESS_3-2__SHP_WGS84G_FRA_2025-02-17/ADMIN-EXPRESS_3-2__SHP_WGS84G_FRA_2025-02-17.7z"
+download.file(link_new_com, destfile = "../raw_data/communes_nouvelles.csv")
+
+
+# table de passages
+# 
+# https://www.insee.fr/fr/information/7671867
+# c'est çà qu'il faudra utiliser pour gérer les communes nouvelles
+# https://www.insee.fr/fr/statistiques/fichier/7671867/table_passage_geo2003_geo2025.zip
